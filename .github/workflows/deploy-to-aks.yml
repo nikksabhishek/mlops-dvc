@@ -22,7 +22,7 @@ jobs:
     # Build and Push Docker Image
     - name: Build and Push Image to ACR
       run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/decision-tree-flask-app:latest -f ./Docker/Dockerfile .
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/decision-tree-flask-app:latest -f .
         docker push ${{ secrets.ACR_LOGIN_SERVER }}/decision-tree-flask-app:latest
 
     # Set up kubectl
