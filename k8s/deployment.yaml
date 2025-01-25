@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: flask-app-container
-        image: <your-dockerhub-username>/decision-tree-flask-app:latest
+        image: nikksabhishek/decision-tree-flask-app:latest
         ports:
         - containerPort: 5000
