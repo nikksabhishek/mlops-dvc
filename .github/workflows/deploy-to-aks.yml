@@ -1,37 +1,44 @@
-name: Deploy to Azure AKS - Group 46
+name: Build and Deploy to AKS
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    # Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      # Step 2: Log in to Azure
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # Login to ACR
+    - name: Login to ACR
+      run: |
+        echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-      # Step 3: Set up Kubernetes credentials
-      - name: Set up kubectl
-        run: |
-          az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
-            --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+    # Build and Push Docker Image
+    - name: Build and Push Image to ACR
+      run: |
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/decision-tree-flask-app:latest .
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/decision-tree-flask-app:latest
 
-      # Step 4: Deploy Kubernetes manifests
-      - name: Deploy to AKS
-        run: |
-          kubectl apply -f k8s/deployment.yaml  # Replace with your manifest file(s)
+    # Set up kubectl
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.27.1'
 
-      # Optional Step 5: Verify the deployment
-      - name: Verify Deployment
-        run: |
-          kubectl rollout status deployment/app  # Replace with your deployment name
+    # Azure AKS Login
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Deploy to AKS
+    - name: Deploy to AKS
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
