@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app-deployment
+  name: decision-tree-deployment
+  labels:
+    app: decision-tree
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: flask-app
+      app: decision-tree
   template:
     metadata:
       labels:
-        app: flask-app
+        app: decision-tree
     spec:
       containers:
-        - name: decision-tree-app
-          image: mlopsdemoregistry.azurecr.io/decision-tree-flask-app:latest
-          ports:
-            - containerPort: 5000
+      - name: decision-tree
+        image: <your-acr-name>.azurecr.io/decision-tree:latest
+        ports:
+        - containerPort: 5000
