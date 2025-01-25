@@ -10,6 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Set up Kubernetes
+      run: |
+        az aks get-credentials --resource-group mlops-demo --name mlops-demo
+        kubectl config current-context
+        kubectl get nodes
+
     # Checkout code
     - name: Checkout code
       uses: actions/checkout@v3
