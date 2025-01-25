@@ -1,0 +1,37 @@
+name: Deploy to Azure AKS - Group 46
+
+on:
+  push:
+    branches:
+      - main 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Log in to Azure
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Step 3: Set up Kubernetes credentials
+      - name: Set up kubectl
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.AKS_RESOURCE_GROUP }} \
+            --name ${{ secrets.AKS_CLUSTER_NAME }} --overwrite-existing
+
+      # Step 4: Deploy Kubernetes manifests
+      - name: Deploy to AKS
+        run: |
+          kubectl apply -f k8s/deployment.yaml  # Replace with your manifest file(s)
+
+      # Optional Step 5: Verify the deployment
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/app  # Replace with your deployment name
