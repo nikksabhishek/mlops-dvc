@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: decision-tree
-        image: <your-acr-name>.azurecr.io/decision-tree:latest
+        image: mlopsdemoregistry.azurecr.io/decision-tree:latest
         ports:
         - containerPort: 5000
