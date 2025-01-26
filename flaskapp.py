@@ -26,5 +26,10 @@ def predict():
     # Return prediction as a JSON response
     return jsonify({"prediction": prediction[0]})
 
+@app.route('/SDK/webLanguage', methods=['GET'])
+def update_web_language():
+    # Your logic here
+    return 'Success', 200
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
