@@ -1,2 +1,2 @@
 # mlops-dvc
-Process and Tooling Demo Repo
+Process and Tooling Demo Repository
