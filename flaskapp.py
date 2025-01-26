@@ -8,6 +8,9 @@ app = Flask(__name__)
 # Load the pre-trained model
 model = joblib.load("best_decision_tree_model.pkl")
 
+# Flower names corresponding to the target values (0, 1, 2)
+flower_names = ['setosa', 'versicolor', 'virginica']
+
 # Define a prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -17,14 +20,14 @@ def predict():
     # Convert input data into numpy array
     features = np.array(data['features']).reshape(1, -1)
 
-    # Get model prediction
+    # Get model prediction (numeric)
     prediction = model.predict(features)
 
-    # Convert prediction to native Python data type (e.g., int)
-    prediction = prediction.astype(float).tolist()
+    # Map numeric prediction to flower name
+    flower_name = flower_names[prediction[0]]
 
     # Return prediction as a JSON response
-    return jsonify({"prediction": prediction[0]})
+    return jsonify({"prediction": flower_name})
 
 @app.route('/SDK/webLanguage', methods=['GET'])
 def update_web_language():
