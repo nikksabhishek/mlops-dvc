@@ -20,6 +20,9 @@ def predict():
     # Get model prediction
     prediction = model.predict(features)
 
+    # Convert prediction to native Python data type (e.g., int)
+    prediction = prediction.astype(float).tolist()
+
     # Return prediction as a JSON response
     return jsonify({"prediction": prediction[0]})
 
