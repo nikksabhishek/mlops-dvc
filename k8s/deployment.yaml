@@ -16,6 +16,21 @@ spec:
     spec:
       containers:
       - name: decision-tree
-        image: mlopsdemoregistry.azurecr.io/decision-tree:latest
+        image: mlopsdemoregistry.azurecr.io/decision-tree:latest # Replace with the correct image name
         ports:
         - containerPort: 5000
+      imagePullSecrets: # Include this if using a private registry
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: decision-tree-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: decision-tree
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
